@@ -165,9 +165,10 @@ export default function Home() {
             <div className="flex flex-col items-center gap-6">
               <a 
                 href="https://github.com/ladykerr/gfbs3-portfolio-demo" 
-                className="px-10 py-4 bg-fuchsia-600 text-white font-bold tracking-widest uppercase text-sm hover:bg-fuchsia-500 transition-all hover:shadow-[0_0_30px_rgba(232,121,249,0.6)] hover:scale-105 duration-300 clip-path-polygon"
+                className="px-10 py-4 bg-blue-600 text-white font-bold tracking-widest uppercase text-sm hover:bg-blue-500 transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] hover:scale-105 duration-300 clip-path-polygon"
+
               >
-                FORK ON GITHUB
+                GITHUB
               </a>
               <div className="flex items-center gap-8 pt-4">
                 <SocialLink href="https://github.com" label="GITHUB" />
