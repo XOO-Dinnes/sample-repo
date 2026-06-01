@@ -111,18 +111,60 @@ export default function Home() {
               {"// ABOUT_ME"}
             </h2>
             
-            {/* Profile Image - Replace src with your image in /public */}
-            <div className="relative w-full aspect-[4/5] border border-cyan-500/30 rounded-sm overflow-hidden bg-cyan-950/30 group">
-              <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(5,5,16,0.8)_100%)] z-10" />
-              {/* Scanline effect */}
-              <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(34,211,238,0.05)_1px,transparent_1px)] bg-[size:100%_4px] z-20 pointer-events-none" />
-              
-              <Image 
-                src={`${basePath}/me.png`}
-                alt="Profile"
-                fill
-                className="object-cover z-0 opacity-60 group-hover:opacity-100 transition-all duration-500 grayscale group-hover:grayscale-0"
-              />
+            {/* Profile Image - animated holographic frame */}
+            <div className="relative w-full aspect-[4/5] group animate-float-soft">
+              {/* Rotating conic gradient halo behind frame */}
+              <div className="absolute -inset-1 rounded-sm overflow-hidden opacity-60 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-[-50%] animate-rotate-conic bg-[conic-gradient(from_0deg,transparent_0deg,rgba(34,211,238,0.6)_60deg,transparent_120deg,rgba(232,121,249,0.6)_200deg,transparent_260deg,rgba(168,85,247,0.5)_320deg,transparent_360deg)]" />
+              </div>
+
+              {/* Main frame with pulsing neon border */}
+              <div className="relative w-full h-full border border-cyan-500/40 rounded-sm overflow-hidden bg-cyan-950/30 animate-neon-pulse">
+                {/* Image */}
+                <div className="absolute inset-0 animate-glitch">
+                  <Image
+                    src={`${basePath}/me.png`}
+                    alt="Profile"
+                    fill
+                    className="object-cover z-0 opacity-70 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105"
+                  />
+                </div>
+
+                {/* Bottom fade */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(5,5,16,0.85)_100%)] z-10 pointer-events-none" />
+
+                {/* Static scanline texture */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(34,211,238,0.06)_1px,transparent_1px)] bg-[size:100%_4px] z-20 pointer-events-none" />
+
+                {/* Moving scanline beam */}
+                <div className="absolute inset-x-0 h-24 z-30 pointer-events-none animate-scanline bg-[linear-gradient(to_bottom,transparent,rgba(34,211,238,0.18)_45%,rgba(232,121,249,0.22)_55%,transparent)] mix-blend-screen" />
+                <div className="absolute inset-x-0 h-8 z-30 pointer-events-none animate-scanline-fast bg-[linear-gradient(to_bottom,transparent,rgba(255,255,255,0.08),transparent)] mix-blend-screen" />
+
+                {/* HUD corner brackets */}
+                <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-cyan-400 drop-shadow-[0_0_4px_rgba(34,211,238,0.9)] z-40 transition-all group-hover:w-8 group-hover:h-8 group-hover:border-fuchsia-400 group-hover:drop-shadow-[0_0_6px_rgba(232,121,249,0.9)]" />
+                <div className="absolute top-2 right-2 w-6 h-6 border-t-2 border-r-2 border-cyan-400 drop-shadow-[0_0_4px_rgba(34,211,238,0.9)] z-40 transition-all group-hover:w-8 group-hover:h-8 group-hover:border-fuchsia-400 group-hover:drop-shadow-[0_0_6px_rgba(232,121,249,0.9)]" />
+                <div className="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 border-cyan-400 drop-shadow-[0_0_4px_rgba(34,211,238,0.9)] z-40 transition-all group-hover:w-8 group-hover:h-8 group-hover:border-fuchsia-400 group-hover:drop-shadow-[0_0_6px_rgba(232,121,249,0.9)]" />
+                <div className="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 border-cyan-400 drop-shadow-[0_0_4px_rgba(34,211,238,0.9)] z-40 transition-all group-hover:w-8 group-hover:h-8 group-hover:border-fuchsia-400 group-hover:drop-shadow-[0_0_6px_rgba(232,121,249,0.9)]" />
+
+                {/* HUD top-left status */}
+                <div className="absolute top-3 left-10 z-40 flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase text-cyan-300/90">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,1)] animate-blink-dot" />
+                  REC
+                </div>
+
+                {/* HUD top-right meta */}
+                <div className="absolute top-3 right-10 z-40 text-[9px] font-mono tracking-widest text-fuchsia-300/80">
+                  ID:0x{(Math.floor(Date.now() / 1000) % 0xfff).toString(16).toUpperCase().padStart(3, "0")}
+                </div>
+
+                {/* HUD bottom label with caret */}
+                <div className="absolute bottom-3 left-10 right-10 z-40 flex items-center justify-between text-[10px] font-mono tracking-widest uppercase">
+                  <span className="text-cyan-300/90">
+                    SUBJECT_ONLINE<span className="text-fuchsia-400 animate-caret">_</span>
+                  </span>
+                  <span className="text-cyan-500/70">v2.0</span>
+                </div>
+              </div>
             </div>
           </div>
           <div className="md:col-span-8 space-y-8 text-cyan-100/80 leading-relaxed font-light">

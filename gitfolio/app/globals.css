@@ -24,3 +24,71 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes scanline-scroll {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+.animate-scanline { animation: scanline-scroll 4s linear infinite; }
+
+@keyframes scanline-fast {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+.animate-scanline-fast { animation: scanline-fast 2.2s linear infinite; }
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(34,211,238,0.35), 0 0 28px rgba(232,121,249,0.25), inset 0 0 18px rgba(34,211,238,0.15);
+    border-color: rgba(34,211,238,0.5);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(232,121,249,0.55), 0 0 48px rgba(34,211,238,0.4), inset 0 0 26px rgba(232,121,249,0.25);
+    border-color: rgba(232,121,249,0.7);
+  }
+}
+.animate-neon-pulse { animation: neon-pulse 3.5s ease-in-out infinite; }
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.01); }
+}
+.animate-float-soft { animation: float-soft 6s ease-in-out infinite; }
+
+@keyframes glitch-x {
+  0%, 92%, 100% { transform: translate(0, 0); filter: none; opacity: 1; }
+  93% { transform: translate(-2px, 1px); filter: hue-rotate(20deg); }
+  94% { transform: translate(3px, -1px); filter: hue-rotate(-30deg); }
+  95% { transform: translate(-1px, 2px); filter: hue-rotate(60deg); opacity: 0.85; }
+  96% { transform: translate(2px, 0); filter: none; }
+}
+.animate-glitch { animation: glitch-x 5.5s steps(1, end) infinite; }
+
+@keyframes blink-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+.animate-blink-dot { animation: blink-dot 1.4s ease-in-out infinite; }
+
+@keyframes rotate-conic {
+  to { transform: rotate(360deg); }
+}
+.animate-rotate-conic { animation: rotate-conic 7s linear infinite; }
+
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-x { background-size: 200% 200%; animation: gradient-x 6s ease infinite; }
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.group:hover .group-hover\:animate-shimmer { animation: shimmer 1.2s ease-out; }
+
+@keyframes typewriter-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-caret { animation: typewriter-caret 1s steps(2) infinite; }
