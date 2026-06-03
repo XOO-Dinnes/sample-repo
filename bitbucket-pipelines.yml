@@ -1,0 +1,10 @@
+image: amazon/aws-cli:latest
+
+pipelines:
+  branches:
+    main:
+      - step:
+          name: Prove AWS access
+          script:
+            - aws sts get-caller-identity
+            - aws ecr describe-repositories --region $AWS_DEFAULT_REGION
