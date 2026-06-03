@@ -14,7 +14,7 @@ pipelines:
           services:
             - docker
           script:
-            - apt-get update -y && apt-get install -y awscli
+            - DEBIAN_FRONTEND=noninteractive apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y awscli
             - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
             - docker build -t test-repo .
             - docker tag test-repo:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/test-repo:latest
