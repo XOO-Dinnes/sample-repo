@@ -3,6 +3,43 @@ import Link from "next/link";
 
 const basePath = process.env.NODE_ENV === "production" ? "/gfbs3-portfolio-demo" : "";
 
+function SkillCategory({ title, color, skills }: { title: string, color: "cyan" | "fuchsia" | "purple", skills: { name: string, level: number }[] }) {
+  const headerColors = {
+    cyan: "text-cyan-400 border-cyan-800",
+    fuchsia: "text-fuchsia-400 border-fuchsia-900",
+    purple: "text-purple-400 border-purple-900",
+  };
+  const barColors = {
+    cyan: "bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.6)]",
+    fuchsia: "bg-fuchsia-500 shadow-[0_0_8px_rgba(232,121,249,0.6)]",
+    purple: "bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.6)]",
+  };
+
+  return (
+    <div className="p-6 bg-[#0a0a1a] border border-cyan-900/30 space-y-5">
+      <h3 className={`text-xs font-bold tracking-widest uppercase border-b pb-2 ${headerColors[color]}`}>
+        {title}
+      </h3>
+      <ul className="space-y-4">
+        {skills.map(skill => (
+          <li key={skill.name} className="space-y-1.5">
+            <div className="flex justify-between text-xs font-mono">
+              <span className="text-cyan-200/70">{skill.name}</span>
+              <span className="text-cyan-600">{skill.level}%</span>
+            </div>
+            <div className="h-1 w-full bg-cyan-950/50 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full ${barColors[color]}`}
+                style={{ width: `${skill.level}%` }}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#050510] text-cyan-50 font-mono selection:bg-fuchsia-500/30 selection:text-fuchsia-200 overflow-x-hidden">
@@ -101,6 +138,49 @@ export default function Home() {
               tags={["PYTHON", "DJANGO", "POSTGRESQL"]}
               color="yellow"
               href="#"
+            />
+          </div>
+        </section>
+
+        {/* Skills / Tech Stack */}
+        <section id="skills" className="py-20 space-y-12 border-t border-cyan-900/30">
+          <div className="flex items-end justify-between border-b border-cyan-900/30 pb-4">
+            <h2 className="text-2xl font-bold tracking-widest text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+              // SKILLS_STACK
+            </h2>
+            <span className="text-xs font-mono text-cyan-700">Technologies I work with</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <SkillCategory
+              title="FRONTEND"
+              color="cyan"
+              skills={[
+                { name: "React / Next.js", level: 90 },
+                { name: "TypeScript", level: 80 },
+                { name: "Tailwind CSS", level: 85 },
+                { name: "HTML / CSS", level: 95 },
+              ]}
+            />
+            <SkillCategory
+              title="BACKEND"
+              color="fuchsia"
+              skills={[
+                { name: "Node.js", level: 75 },
+                { name: "Python", level: 70 },
+                { name: "PostgreSQL", level: 65 },
+                { name: "REST APIs", level: 80 },
+              ]}
+            />
+            <SkillCategory
+              title="TOOLS"
+              color="purple"
+              skills={[
+                { name: "Git / GitHub", level: 90 },
+                { name: "VS Code", level: 95 },
+                { name: "Docker", level: 55 },
+                { name: "Figma", level: 60 },
+              ]}
             />
           </div>
         </section>
