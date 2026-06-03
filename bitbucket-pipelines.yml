@@ -1,4 +1,4 @@
-image: amazon/aws-cli:latest
+image: atlassian/default-image:4
 
 pipelines:
   branches:
@@ -8,3 +8,13 @@ pipelines:
           script:
             - aws sts get-caller-identity
             - aws ecr describe-repositories --region $AWS_DEFAULT_REGION
+
+      - step:
+          name: Build and Push Docker image to ECR
+          services:
+            - docker
+          script:
+            - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+            - docker build -t test-repo .
+            - docker tag test-repo:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/test-repo:latest
+            - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/test-repo:latest
