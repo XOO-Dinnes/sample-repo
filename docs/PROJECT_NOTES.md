@@ -212,17 +212,138 @@ Push to Bitbucket: `git push bitbucket main`
 ---
 
 ## Next Goals
-- [ ] Get pipeline fully green (Bitbucket → build Docker → push to ECR)
-- [ ] Modify page.tsx → push → see pipeline run end to end
-- [ ] Migrate same setup to GitHub → connect GitHub to AWS
+- [x] Get pipeline fully green (Bitbucket → build Docker → push to ECR) ← Pipeline #7 done
+- [x] Migrate same setup to GitHub → connect GitHub to AWS ← GitHub Actions green
+- [ ] Verify new Docker image in AWS ECR after GitHub Actions run
+- [ ] Make a code change → push to GitHub → confirm pipeline auto-runs again
 - [ ] Apply same workflow to real project (blackbox)
 
 ---
 
-## Ideas & Notes
-<!-- Add new ideas, decisions, or notes below -->
+## Bitbucket vs GitHub — Simple Comparison
 
-- The real project (blackbox) will use the same Bitbucket → AWS pipeline setup
+### Pipeline / Automation Tool
+| | Bitbucket | GitHub |
+|---|---|---|
+| Tool name | Bitbucket Pipelines | GitHub Actions |
+| Config file | `bitbucket-pipelines.yml` | `.github/workflows/deploy-aws.yml` |
+| Where secrets are stored | Repo Settings → Variables | Repo Settings → Secrets and variables → Actions |
+| Variable syntax | `$VARIABLE_NAME` | `${{ secrets.VARIABLE_NAME }}` |
+| Free minutes per month | 50 minutes only | Unlimited on public repos |
+| Speed (our test) | ~1 min 40 sec | ~1 min 4 sec |
+| Needs AWS CLI install | Yes — had to install manually | No — already pre-installed |
+| Needs Docker install | Yes — had to add as service | No — already pre-installed |
+
+### What Stayed The Same
+```
+→ Same Docker commands (docker build, docker tag, docker push)
+→ Same AWS commands (aws ecr get-login-password, aws sts get-caller-identity)
+→ Same ECR repo (test-repo)
+→ Same AWS keys and region
+→ Same Dockerfile
+→ Same concept: push code → auto-build → push to ECR
+```
+
+### Key Difference — Minutes Limit
+```
+Bitbucket free plan:
+→ 50 minutes per month total
+→ we used all 50 from failed test runs
+→ pipeline #10 halted — couldn't continue
+
+GitHub Actions on public repo:
+→ NO minute limit
+→ pipeline ran in 1 min 4 sec with no issues
+→ no quota, no blocking
+```
+
+### Key Difference — Pre-installed Tools
+```
+Bitbucket image:
+→ needed to install AWS CLI manually (caused pip, pip3, apt-get errors)
+→ needed to add Docker as a separate service
+→ caused many failures and wasted minutes
+
+GitHub Actions ubuntu-latest:
+→ AWS CLI already installed
+→ Docker already installed
+→ just write the commands, no setup needed
+→ cleaner, faster, fewer errors
+```
+
+### Result From Our Test
+```
+Bitbucket Pipeline #7:  ✓ green — 1 min 40 sec (after 7 failed attempts)
+GitHub Actions #1:      ✓ green — 1 min 4 sec  (first try, no failures)
+```
+
+---
+
+## GitHub Actions Setup (What We Did)
+
+### Step 1 — Added secrets to GitHub repo
+```
+github.com/XOO-Dinnes/sample-repo
+→ Settings → Secrets and variables → Actions
+→ Added:
+   AWS_ACCESS_KEY_ID
+   AWS_SECRET_ACCESS_KEY
+   AWS_DEFAULT_REGION  (ap-northeast-1)
+   AWS_ACCOUNT_ID      (364046407464)
+```
+
+### Step 2 — Created workflow file
+```
+.github/workflows/deploy-aws.yml  ← at ROOT level of repo
+```
+
+Two jobs — same as Bitbucket:
+```
+Job 1: Prove AWS access
+→ aws sts get-caller-identity
+→ aws ecr describe-repositories
+
+Job 2: Build and Push Docker image
+→ login to ECR
+→ docker build
+→ docker tag
+→ docker push
+```
+
+### Step 3 — Pushed and watched Actions tab
+```
+git push origin main
+→ GitHub auto-triggered the workflow
+→ Actions tab showed green in 1 min 4 sec
+→ Both jobs passed on first try
+```
+
+---
+
+## How This Connects to Blackbox Migration
+
+```
+What we proved with test repo:
+✓ GitHub can connect to AWS using secrets
+✓ Docker builds and pushes to ECR automatically
+✓ Faster and more reliable than Bitbucket
+✓ No minute limits
+
+What blackbox migration adds on top:
+→ Fetch secrets from Amazon SSM (environment config)
+→ Build frontend (yarn build)
+→ Build backend (Go/Revel)
+→ Two Docker images (frontend + backend)
+→ Deploy to Amazon ECS (actually runs the app)
+→ 3 separate workflow files (dev, staging, production)
+```
+
+---
+
+## Ideas & Notes
+- The real project (blackbox) will use the same GitHub Actions → AWS pipeline setup
 - Always merge existing branches before creating a refactor branch
 - Bitbucket free plan requires workspace to be public for pushing
 - Each pipeline run starts fresh — nothing is saved between runs
+- GitHub Actions is better choice than Bitbucket for this project — faster, no limits, cleaner
+- Blackbox migration order: dev first → staging → production (never touch production first)
